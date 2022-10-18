@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  min-height: 100vh;
+}
+
+@font-face {
+  font-family: 'Cooper';
+  src: url('./assets/fonts/cooper_medium_bt.ttf');
+}
+
+@font-face {
+  font-family: 'GT Walsheim Pro';
+  src: local('GT Walsheim Pro Regular'), local('GTWalsheimProRegular'), url('./assets/fonts/GTWalsheimProRegular.woff2') format('woff2'),
+    url('./assets/fonts/GTWalsheimProRegular.woff') format('woff'), url('./assets/fonts/GTWalsheimProRegular.ttf') format('truetype');
+}

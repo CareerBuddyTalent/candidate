@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "plugin:vue/base",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": [
+      "warn"
+    ]
+  }
+}
