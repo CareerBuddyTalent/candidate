@@ -5,9 +5,11 @@ const instance = axios.create({
 });
 
 export const setAuthHeaders = () => {
-  instance.defaults.headers.common['uid'] = localStorage.getItem('uid');
-  instance.defaults.headers.common['client'] = localStorage.getItem('client');
-  instance.defaults.headers.common['access-token'] = localStorage.getItem('token');
+  instance.interceptors.request.use(function (config) {
+    const token = localStorage.getItem('token');
+    config.headers.Authorization = token ? `Bearer ${token}` : '';
+    return config;
+  });
 };
 
 setAuthHeaders();

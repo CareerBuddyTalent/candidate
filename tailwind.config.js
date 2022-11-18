@@ -5,14 +5,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        cooper: ['Cooper', 'sans-serif'],
-        GTWalsheimPro: ['"GT Walsheim Pro"'],
+        albertSmall: ['Albert Small'],
+        albert: ['Albert'],
+        albertSemiBold: ['Albert Semi Bold'],
+        albertBold: ['Albert Bold'],
+        albertExtraBold: ['AlbertExtra'],
       },
       colors: {
-        'brand-black': '#090E11',
-        'brand-primary': '#F0386A',
+        'brand-black': '#050001',
+        'brand-primary': '#FF2449',
         'brand-sky': '#007AB9',
-        'brand-light': '#FAFAFA',
+        'brand-light': '#E2E3E9',
         'brand-placholder': '#012F3266',
         'brand-card': '#6D2E5D0D',
         'brand-color': '#6D2E5D',

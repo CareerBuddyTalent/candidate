@@ -1,20 +1,18 @@
 <template>
-  <main class="lg:pt-10 lg:px-20 p-4">
-    <div class="lg:block flex justify-between items-center lg:mb-14 mb-10 mt-5">
+  <main class="lg:px-20 lg:py-11 p-4 bg-white rounded-xl">
+    <div class="lg:mb-0 mb-10">
       <img src="@/assets/images/tamborinSmall.png" alt="logo" class="object-cover lg:hidden" />
-      <p class="text-brand-black/70 font-normal text-sm text-right">
-        Exising user? <router-link to="/login" class="text-brand-primary">Sign In</router-link>
+    </div>
+
+    <div class="mb-10">
+      <p class="text-brand-black text-[40px] font-albertExtraBold">Sign Up</p>
+      <p class="text-brand-black/70 text-lg font-normal">
+        Have an account? <router-link to="/register" class="text-brand-primary font-albertBold text-lg">Log In</router-link>
       </p>
     </div>
-    <!-- <p class="text-brand-black/70 font-normal text-sm text-right mb-10 hidden lg:block">Exising user? <router-link to="/candidate/login" class="text-brand-primary">Sign In</router-link></p> -->
-    <div class="mb-10">
-      <p class="text-brand-black font-normal text-3xl font-cooper">Sign up to Tamborin</p>
-      <p class="text-brand-black/40 text-base font-normal">The first step to a world of possibilities.</p>
-    </div>
     <div class="lg:flex grid gap-3 mb-8">
-      <Button label="with Google" :icon="Google" outline color="white" />
-      <Button label="with LinkedIn" :icon="Linkedin" color="info" />
-      <Button label=" with Github" :icon="Github" color="black" />
+      <Button label="Log in with LinkedIn" :icon="Linkedin" color="info" full />
+      <Button label="Log in with Google" :icon="Google" outline color="white" full />
     </div>
     <div class="flex items-center mb-8">
       <div class="flex w-full bg-brand-black/10 h-0.5"></div>
@@ -24,72 +22,60 @@
 
     <form>
       <div class="grid gap-4 mb-6 md:grid-cols-2">
-        <div class="relative">
-          <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-            <User />
-          </div>
-          <input
-            v-model="v$.data.first_name.$model"
-            type="text"
-            id="first_name"
-            class="bg-brand-light border-0 text-gray-900 text-sm rounded-md focus:ring-0 focus:border-0 block w-full pl-10 p-4 placeholder:text-[#13060F]/30"
-            placeholder="First name"
-          />
-          <div class="absolute text-sm top-14 whitespace-nowrap text-red-500" v-for="(error, index) in v$.data.first_name.$errors" :key="index">
+        <div>
+          <Input label="First Name" id="first_name" type="text" labelFor="first_name" placeholder="John" v-model="v$.data.first_name.$model" />
+          <div class="text-sm whitespace-nowrap text-red-500" v-for="(error, index) in v$.data.first_name.$errors" :key="index">
             {{ error.$message }}
           </div>
         </div>
 
         <div class="relative">
-          <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-            <User />
-          </div>
-          <input
-            v-model="v$.data.last_name.$model"
-            type="text"
-            id="lastName"
-            class="bg-brand-light border-0 text-gray-900 text-sm rounded-md focus:ring-0 focus:border-0 block w-full pl-10 p-4 placeholder:text-[#13060F]/30"
-            placeholder="Last name"
-          />
-          <div class="absolute text-sm top-14 whitespace-nowrap text-red-500" v-for="(error, index) in v$.data.last_name.$errors" :key="index">
+          <Input label="Last Name" id="last_name" type="text" labelFor="last_name" placeholder="Doe" v-model="v$.data.last_name.$model" />
+          <div class="text-sm whitespace-nowrap text-red-500" v-for="(error, index) in v$.data.last_name.$errors" :key="index">
             {{ error.$message }}
           </div>
         </div>
       </div>
       <div class="relative mb-6">
-        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-          <Email />
-        </div>
-        <input
-          v-model="v$.data.email.$model"
-          type="email"
-          id="email"
-          class="bg-brand-light border-0 text-gray-900 text-sm rounded-md focus:ring-0 focus:border-0 block w-full pl-10 p-4 placeholder:text-[#13060F]/30"
-          placeholder="Email Address"
-          required=""
-        />
-        <div class="absolute text-sm top-14 whitespace-nowrap text-red-500" v-for="(error, index) in v$.data.email.$errors" :key="index">
+        <Input label="Email Address" id="email" type="email" labelFor="email" placeholder="e.g alisoneyo@email.com" v-model="v$.data.email.$model" />
+        <div class="text-sm whitespace-nowrap text-red-500" v-for="(error, index) in v$.data.email.$errors" :key="index">
           {{ error.$message }}
         </div>
       </div>
-      <div class="relative" :class="[!v$.data.password.$anyDirty._value ? 'mb-20' : 'mb-10']">
-        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-          <Lock />
-        </div>
-        <input
-          v-model="v$.data.password.$model"
-          :type="showPassword ? 'text' : 'password'"
+
+      <div class="relative mb-6">
+        <Input
+          label="Create Password"
           id="password"
-          class="bg-brand-light border-0 text-gray-900 text-sm rounded-md focus:ring-0 focus:border-0 block w-full pl-10 p-4 placeholder:text-[#13060F]/30"
-          placeholder="Password"
-          required=""
+          :type="showPassword ? 'text' : 'password'"
+          labelFor="password"
+          placeholder="********"
+          v-model="v$.data.password.$model"
         />
-        <div class="flex absolute inset-y-0 right-0 items-center pr-3 cursor-pointer">
+        <div class="flex absolute inset-y-0 right-0 items-center pr-3 cursor-pointer mt-10">
           <EyeClose v-if="!showPassword" @click="showPassword = true" />
           <Email v-else @click="showPassword = false" />
         </div>
-        <ul class="list-disc absolute text-sm top-14 whitespace-nowrap text-red-500 mb-4">
+        <ul class="list-disc text-sm whitespace-nowrap text-red-500">
           <li v-for="error in v$.data.password.$errors" :key="error.$message">{{ error.$message }}</li>
+        </ul>
+      </div>
+
+      <div class="relative mb-6">
+        <Input
+          label="Confirm Password"
+          id="password"
+          :type="showConfirmPassword ? 'text' : 'password'"
+          labelFor="password"
+          placeholder="********"
+          v-model="v$.data.password_confirmation.$model"
+        />
+        <div class="flex absolute inset-y-0 right-0 items-center pr-3 cursor-pointer mt-10">
+          <EyeClose v-if="!showConfirmPassword" @click="showConfirmPassword = true" />
+          <Email v-else @click="showConfirmPassword = false" />
+        </div>
+        <ul class="list-disc text-sm whitespace-nowrap text-red-500 mb-4">
+          <li v-for="error in v$.data.password_confirmation.$errors" :key="error.$message">{{ error.$message }}</li>
         </ul>
       </div>
       <Button label="Sign Up" color="primary" full @click="handleRegistration" :loading="loading" :disabled="disabled" />
@@ -105,6 +91,7 @@
 
 <script setup>
 import Button from '@/components/Button.vue';
+import Input from '@/components/form/Input.vue';
 import { Google, Linkedin, Github } from '@/utils/icons';
 import User from '@/assets/icons/user.svg?inline';
 import Email from '@/assets/icons/email.svg?inline';
@@ -113,7 +100,7 @@ import EyeClose from '@/assets/icons/eye-slash.svg?inline';
 import useVuelidate from '@vuelidate/core';
 import { ref, reactive, computed } from 'vue';
 import { useStore } from 'vuex';
-import { required, email, minLength, helpers } from '@vuelidate/validators';
+import { required, email, minLength, helpers, sameAs, alphaNum } from '@vuelidate/validators';
 import { sleep } from '@/utils/helper';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
@@ -123,9 +110,15 @@ const display = ref([]);
 const disabled = ref(false);
 const loading = ref(false);
 const showPassword = ref(false);
+const showConfirmPassword = ref(false);
 const store = useStore();
-const state = reactive({ data: { first_name: '', last_name: '', email: '', password: '' } });
+const state = reactive({
+  data: { first_name: '', last_name: '', email: '', password: '', password_confirmation: '', registration_type: 'candidate' },
+});
 const toast = useToast();
+const passwordIsSame = (password) => {
+  return password === state.data.password;
+};
 const rules = {
   data: {
     first_name: {
@@ -146,21 +139,18 @@ const rules = {
         () => `Include an UPPERCASE`,
         (value) => /[A-Z]/.test(value),
       ),
-      specialCharacter: helpers.withMessage(
-        () => `Include an special character`,
-        (value) => /\W|_/.test(value),
-      ),
       minLength: minLength(8),
-      numeric: helpers.withMessage(
-        () => `Include a number`,
-        (value) => /[0-9]/.test(value),
-      ),
     },
+    password_confirmation: { required, sameAsPassword: helpers.withMessage('Password does not match', passwordIsSame) },
   },
 };
+// const checkDisability = computed(() => {
+//   return !state.data ? (disabled.value = false) : (disabled.value = true);
+// });
 
 async function handleRegistration() {
-  // if (v$.data.$anyError) return;
+  if (!v$.value.$anyDirty) return;
+  // console.log(v$.value.$anyDirty)
   try {
     loading.value = true;
     disabled.value = true;

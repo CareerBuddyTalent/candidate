@@ -106,6 +106,16 @@ const routes = [
           middleware: [AuthMiddleware],
         },
       },
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import(/* webpackChunkName: "Assessment" */ '@/views/Profile.vue'),
+        meta: {
+          title: 'Edit your Tamborin Profile',
+          text: '',
+          middleware: [AuthMiddleware],
+        },
+      },
     ],
   },
 ];

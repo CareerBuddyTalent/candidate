@@ -7,12 +7,30 @@ body{
 }
 
 @font-face {
-  font-family: 'Cooper';
-  src: url('./assets/fonts/cooper_medium_bt.ttf');
+  /* small */
+  font-family: 'Albert Small';
+  src: url('./assets/fonts/AlbertSans-VariableFont_wght.ttf');
+}
+@font-face {
+  /* 400 */
+  font-family: 'Albert';
+  src: url('./assets/fonts/AlbertSans-Regular.ttf');
 }
 
 @font-face {
-  font-family: 'GT Walsheim Pro';
-  src: local('GT Walsheim Pro Regular'), local('GTWalsheimProRegular'), url('./assets/fonts/GTWalsheimProRegular.woff2') format('woff2'),
-    url('./assets/fonts/GTWalsheimProRegular.woff') format('woff'), url('./assets/fonts/GTWalsheimProRegular.ttf') format('truetype');
+  /* 600 */
+  font-family: 'Albert Semi Bold';
+  src: url('./assets/fonts/AlbertSans-SemiBold.ttf');
+}
+
+@font-face {
+  /* 700 */
+  font-family: 'Albert Bold';
+  src: url('./assets/fonts/AlbertSans-Bold.ttf');
+}
+
+@font-face {
+  /* 800 */
+  font-family: 'AlbertExtra';
+  src: url('./assets/fonts/AlbertSans-ExtraBold.ttf');
 }

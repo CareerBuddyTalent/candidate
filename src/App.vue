@@ -1,5 +1,5 @@
 <template>
-  <div class="font-GTWalsheimPro">
+  <div class="font-albert">
     <router-view />
   </div>
 </template>
