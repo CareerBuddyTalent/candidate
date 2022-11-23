@@ -154,12 +154,17 @@ import Chat from '@/assets/icons/chat.svg?inline';
 import Close from '@/assets/icons/close.svg?inline';
 import Button from '@/components/Button.vue';
 import Modal from '@/components/Modal.vue';
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 
 const showModal = ref(false);
 const successModal = ref(false);
 const disable = ref(true);
 const cover = ref('');
+const store = useStore();
+const route = useRoute();
+const jobDescription = ref(null);
 
 watch(cover, (newQuestion, oldQuestion) => {
   if (newQuestion) {
@@ -171,4 +176,8 @@ function success() {
   showModal.value = false;
   successModal.value = true;
 }
+
+onMounted(async () => {
+  jobDescription.value = await store.dispatch('global/getSingleJob', route.params.id);
+});
 </script>

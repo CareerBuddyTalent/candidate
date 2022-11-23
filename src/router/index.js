@@ -61,7 +61,7 @@ const routes = [
         },
       },
       {
-        path: '/jobs/:id/:name',
+        path: '/jobs/:id',
         name: 'Jobs-Description',
         component: () => import(/* webpackChunkName: "SingleJob" */ '@/views/JobDescription.vue'),
         meta: {

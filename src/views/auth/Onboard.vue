@@ -8,29 +8,26 @@
             <div class="circle"></div>
             <div class="line"></div>
           </div>
-          <!-- <div :class="[current == Welcome ? 'text-blue-600' : 'text-label']" class="content mb-10">Amount & source</div> -->
         </div>
         <div :class="[current == Job ? 'active' : current == Resume ? 'completed' : current !== Job ? '' : 'completed']" class="relative step grow">
           <div class="v-stepper">
             <div class="circle"></div>
             <div class="line"></div>
           </div>
-          <!-- <div :class="[current == 2 ? 'text-blue-600' : 'text-label']" class="content mb-10">Receipient details</div> -->
         </div>
         <div :class="[current == Resume ? 'completed' : current !== Resume ? '' : 'completed']" class="relative step">
           <div class="v-stepper">
             <div class="circle"></div>
             <div class="line"></div>
           </div>
-          <!-- <div class="content" :class="[current == 3 ? 'text-blue-600' : 'text-label']">Overview</div> -->
         </div>
       </div>
 
       <keep-alive>
-        <component :is="current"></component>
+        <component :is="current" ref="child"></component>
       </keep-alive>
       <Button :label="current == Welcome ? 'Skip' : 'Previous'" color="primaryOpacity" full @click="prevComp" class="mb-4" />
-      <Button label="Proceed" color="primary" full @click="nextComp" />
+      <Button label="Proceed" color="primary" full @click="handleEvent" />
     </div>
 
     <div class="basis-2/6 bg-[#53B1FB]/10 px-20 hidden lg:block pt-11">
@@ -47,25 +44,31 @@
 </template>
 
 <script setup>
-import Welcome from '@/components/Onboarding/Welcome.vue';
 import Job from '@/components/Onboarding/Job.vue';
 import Resume from '@/components/Onboarding/Resume.vue';
+import Welcome from '@/components/Onboarding/Welcome.vue';
 import Button from '@/components/Button.vue';
-import { shallowRef } from 'vue';
+import { errorMessage } from '@/utils/helper';
+import { ref, shallowRef } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useStore } from 'vuex';
 
 const current = shallowRef(Welcome);
 const router = useRouter();
+const store = useStore();
+const child = ref(null);
+const toast = useToast();
 
-function nextComp() {
-  if (current.value != Job && current.value != Resume) {
-    current.value = Job;
-  } else if (current.value == Job) {
-    current.value = Resume;
-  } else if (current.value == Resume) {
-    alert('Weldone');
-  }
-}
+// function nextComp() {
+//   if (current.value != Job && current.value != Resume) {
+//     current.value = Job;
+//   } else if (current.value == Job) {
+//     current.value = Resume;
+//   } else if (current.value == Resume) {
+//     alert('Weldone');
+//   }
+// }
 function prevComp() {
   if (current.value == Welcome) {
     router.push('/jobs');
@@ -73,6 +76,47 @@ function prevComp() {
     current.value = Welcome;
   } else {
     current.value = Job;
+  }
+}
+
+async function handleEvent() {
+  try {
+    if (current.value == Welcome) {
+      const res = await store.dispatch('auth/onboardProfile', child.value.profileDetails);
+      current.value = Job;
+    } else if (current.value == Job) {
+      const data = {
+        ...child.value.preferenceDetails,
+        next_role_perks: child.value.preferenceDetails?.next_role_perks?.split(','),
+      };
+      await store.dispatch('auth/onboardPreference', data);
+      current.value = Resume;
+    } else {
+      if (!child.value.resumeDetails) {
+        toast.error('Please upload file, abi you wan collect', {
+          timeout: 3000,
+          hideProgressBar: true,
+        });
+        return;
+      }
+      const data = new FormData();
+      data.append('resume', child.value.resumeDetails);
+      const res = await store.dispatch('auth/onboardResume', data);
+      router.push('/jobs');
+      toast.success('Welcome on board', {
+        timeout: 3000,
+        hideProgressBar: true,
+      });
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 422) {
+      console.log(error.response.data.errors);
+      // return error.response.data.message;
+    }
+    toast.error(errorMessage(error), {
+      timeout: 3000,
+      hideProgressBar: true,
+    });
   }
 }
 </script>

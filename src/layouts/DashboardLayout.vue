@@ -26,7 +26,7 @@
           <img
             src="https://via.placeholder.com/320X430"
             alt="profileImage"
-            class="rounded-full w-8 h-8 hidden lg:block cursor-pointer"
+            class="rounded-full w-8 h-8 lg:block cursor-pointer"
             @click.stop="toggleDropdown()"
             type="button"
             data-dropdown-toggle="userDropdown"
@@ -56,7 +56,7 @@
                 <router-link to="#" class="block py-2 px-4">Help and Support</router-link>
               </li>
               <li>
-                <p @click="logout" class="block py-2 px-4 text-[#D80027]">Log Out</p>
+                <p @click="logout" class="block py-2 px-4 text-[#D80027] cursor-pointer">Log Out</p>
               </li>
             </ul>
             <div class="py-1"></div>
@@ -89,7 +89,7 @@ function toggleDropdown() {
 }
 
 async function logout() {
-  await store.dispatch('auth/logout');
+  await store.dispatch('logout');
   return router.push('/login');
 }
 </script>
