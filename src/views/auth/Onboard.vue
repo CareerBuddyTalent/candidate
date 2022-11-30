@@ -82,7 +82,7 @@ function prevComp() {
 async function handleEvent() {
   try {
     if (current.value == Welcome) {
-      const res = await store.dispatch('auth/onboardProfile', child.value.profileDetails);
+      await store.dispatch('auth/onboardProfile', child.value.profileDetails);
       current.value = Job;
     } else if (current.value == Job) {
       const data = {
@@ -93,7 +93,7 @@ async function handleEvent() {
       current.value = Resume;
     } else {
       if (!child.value.resumeDetails) {
-        toast.error('Please upload file, abi you wan collect', {
+        toast.error('Please upload file', {
           timeout: 3000,
           hideProgressBar: true,
         });
@@ -101,7 +101,7 @@ async function handleEvent() {
       }
       const data = new FormData();
       data.append('resume', child.value.resumeDetails);
-      const res = await store.dispatch('auth/onboardResume', data);
+      await store.dispatch('auth/onboardResume', data);
       router.push('/jobs');
       toast.success('Welcome on board', {
         timeout: 3000,

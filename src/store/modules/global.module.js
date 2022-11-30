@@ -63,5 +63,11 @@ export const global = {
       // if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
       return res.data.data;
     },
+    async applyToJob({ commit }, credential) {
+      console.log(credential);
+      const res = await GlobalService.applyToJob(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data.data;
+    },
   },
 };

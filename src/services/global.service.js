@@ -15,8 +15,12 @@ class GlobalService {
   async getAllJobs() {
     return await axiosInstance.get('candidate/job-pools');
   }
-  async getSingleJob(job) {
-    return await axiosInstance.get(`candidate/job-pools/${job}`);
+  async getSingleJob(id) {
+    return await axiosInstance.get(`candidate/job-pools/${id}`);
+  }
+  async applyToJob(data) {
+    console.log(data);
+    return await axiosInstance.post(`candidate/job-pools/${data.id}/apply`, { note: data.note });
   }
 }
 export default new GlobalService();

@@ -18,8 +18,11 @@ class AuthService {
   async getUser() {
     return await axiosInstance.get('candidate/profile');
   }
-  async updateUserProfile() {
-    return await axiosInstance.post('candidate/profile');
+  async updateUserProfile(details) {
+    return await axiosInstance.post('candidate/profile', details);
+  }
+  async updateUserProfilePicture(details) {
+    return await axiosInstance.post('candidate/profile/avatar', details);
   }
 }
 export default new AuthService();
