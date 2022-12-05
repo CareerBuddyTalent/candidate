@@ -6,101 +6,112 @@
     </div>
     <form>
       <div class="mb-6">
-        <label for="role" class="block mb-3 text-base font-medium text-brand-black/70">What point are you in your job search</label>
-        <select id="role" class="bg-brand-light border-0 text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3">
-          <option selected="" disabled>Select one option</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
+        <Select
+          id="role"
+          label="What point are you in your job search?"
+          :options="enums.candidate_availability_statuses"
+          v-model="preferenceDetails.availability_status"
+        />
       </div>
       <div class="mb-6">
-        <label for="qualification" class="block mb-3 text-base font-medium text-brand-black/70">What type of role are you looking for?</label>
-        <select
-          id="qualification"
-          class="bg-brand-light border-0 text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-        >
-          <option selected="" disabled>Select one option</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
-      </div>
-      <div class="mb-6">
-        <label for="role" class="block mb-3 text-base font-medium text-brand-black/70">How many years of experience do you have?</label>
-        <select id="role" class="bg-brand-light border-0 text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3">
-          <option selected="" disabled>Select one option</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
-      </div>
-      <div class="mb-6">
-        <label for="qualification" class="block mb-3 text-base font-medium text-brand-black/70"
-          >What type of company are you looking to work for?</label
-        >
-        <select
-          id="qualification"
-          class="bg-brand-light border-0 text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-        >
-          <option selected="" disabled>Select one option</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
-      </div>
-      <div class="mb-6">
-        <label for="qualification" class="block mb-3 text-base font-medium text-brand-black/70">Where would you like to work in?</label>
-        <div class="grid gap-4 md:grid-cols-2">
-          <select
-            id="qualification"
-            class="bg-brand-light border-0 text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-          >
-            <option selected="" disabled>Country</option>
-            <option value="US">United States</option>
-            <option value="CA">Canada</option>
-            <option value="FR">France</option>
-            <option value="DE">Germany</option>
-          </select>
-          <select
-            id="qualification"
-            class="bg-brand-light border-0 text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-          >
-            <option selected="" disabled>State</option>
-            <option value="US">United States</option>
-            <option value="CA">Canada</option>
-            <option value="FR">France</option>
-            <option value="DE">Germany</option>
-          </select>
+        <label for="role" class="block text-lg font-albert text-brand-black/70 mb-3">What type of role are you looking for?</label>
+        <div class="grid gap-4 md:grid-cols-4 sm:grid-cols-2">
+          <div class="inline-flex gro mr-2" v-for="item in enums.job_types" :key="item.value">
+            <input
+              :id="item.value"
+              type="checkbox"
+              :value="item.key"
+              v-model="preferenceDetails.job_types"
+              class="w-6 h-6 text-brand-primary mb-2 bg-brand-light/10 rounded-[10px] p-3 appearance-none focus:outline-none border border-brand-light focus:border-brand-primary focus:border focus:ring-brand-primary"
+            />
+            <label :for="item.value" class="ml-2 text-brand-black/70 text-lg whitespace-nowrap">{{ item.value }}</label>
+          </div>
         </div>
       </div>
       <div class="mb-6">
-        <label for="qualification" class="block mb-3 text-base font-medium text-brand-black/70">What are you looking for in your next role</label>
-        <textarea
-          id="message"
-          rows="3"
-          class="block p-2.5 w-full text-base text-brand-black bg-brand-light rounded-md border border-brand-light placeholder:text-brand-black/20 focus:ring-0 focus:border-0"
-          placeholder="e.g hands-on, specialization...."
-        ></textarea>
+        <Input
+          label="How many years of experience do you have?"
+          labelFor="experience"
+          type="text"
+          id="experience"
+          placeholder="10"
+          v-model="preferenceDetails.years_of_experience"
+        />
+      </div>
+      <div class="mb-6">
+        <Select
+          id="type"
+          label="What type of company are you looking to work for?"
+          :options="companyCategory"
+          v-model="preferenceDetails.company_category"
+        />
+      </div>
+      <div class="mb-6">
+        <label for="qualification" class="block text-lg font-medium text-brand-black/70">Where would you like to work in?</label>
+        <div class="grid gap-4 md:grid-cols-2">
+          <Select id="Country" :options="country" v-model="preferenceDetails.location.country" />
+          <Select id="State" :options="state" v-model="preferenceDetails.location.state" />
+        </div>
+      </div>
+      <div class="mb-6">
+        <Input
+          label="What are you looking for in your next role"
+          labelFor="perks"
+          id="perks"
+          v-model="preferenceDetails.next_role_perks"
+          placeholder="List is seperated with a comma"
+        />
       </div>
       <div class="mb-10 flex">
-        <span class="inline-flex items-center px-5 py-3 text-base text-white bg-[#172A49] rounded-l-md border rounded border-r-0 border-gray-300">
-          $
-        </span>
-        <input
-          type="text"
-          id="amount"
-          class="rounded-none rounded-r-md border-0 bg-brand-light text-brand-black focus:ring-0 focus:border-0 block flex-1 min-w-0 w-full text-base p-3"
-        />
+        <Input side id="salary" v-model="preferenceDetails.desired_salary" placeholder="Enter amount" class="flex-1" />
       </div>
     </form>
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import Select from '@/components/form/Select.vue';
+import Input from '@/components/form/Input.vue';
+import TextArea from '@/components/form/TextArea.vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const state = ref(null);
+const companyCategory = ref(null);
+const pageLoaded = ref(false);
+
+const preferenceDetails = ref({
+  availability_status: '',
+  job_types: [],
+  years_of_experience: '',
+  company_category: '',
+  location: {
+    country: '',
+    state: '',
+  },
+  next_role_perks: '',
+  desired_salary: '',
+});
+const enums = computed(() => {
+  return store.state.global.EnumDetails;
+});
+const country = computed(() => {
+  return store.state.global.Countries;
+});
+watch(
+  () => preferenceDetails.value.location.country,
+  async (country) => {
+    state.value = await store.dispatch('global/getStates', country);
+  },
+);
+
+onMounted(async () => {
+  companyCategory.value = await store.dispatch('global/getCompanyCategory');
+  pageLoaded.value = true;
+});
+
+defineExpose({
+  preferenceDetails,
+});
 </script>

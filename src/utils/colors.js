@@ -29,7 +29,7 @@ export const colorsBgHover = {
 };
 
 export const colorsBorders = {
-  white: 'border-brand-black',
+  white: 'border-white',
   black: 'border-black',
   info: 'border-brand-sky',
   primary: 'border-brand-primary',
@@ -39,8 +39,8 @@ export const colorsBorders = {
 };
 
 export const colorsText = {
-  white: 'text-brand-black',
-  black: 'text-white',
+  white: 'text-white',
+  black: 'text-black',
   info: 'text-white',
   primary: 'text-brand-primary',
   success: 'text-emerald-600',
@@ -50,7 +50,7 @@ export const colorsText = {
 
 export const colorsOutline = {
   white: [colorsText.white, colorsBorders.white],
-  black: [colorsText.black, colorsBorders.black],
+  black: [colorsText.black, colorsBorders.white],
   info: [colorsText.info, colorsBorders.info],
   primary: [colorsText.primary, colorsBorders.primary],
   success: [colorsText.success, colorsBorders.success],

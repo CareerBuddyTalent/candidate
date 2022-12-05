@@ -1,34 +1,41 @@
 <template>
-  <main>
+  <main v-if="pageLoaded">
     <NavBody>
       <template #body>
         <div class="flex items-center justify-between relative">
           <div class="w-full">
-            <div class="xl:flex items-center mb-4 cursor-pointer hidden" @click.stop="$router.go(-1)">
+            <div class="flex items-center mb-4 cursor-pointer" @click.stop="$router.go(-1)">
               <Back />
-              <p class="text-brand-primary ml-2">Back</p>
+              <p class="text-white ml-2">Back</p>
             </div>
-            <p class="font-normal lg:text-4xl text-2xl text-white font-cooper lg:mb-3 italic">Product Design Lead</p>
+            <p class="font-normal lg:text-4xl text-2xl text-white font-albertSemiBold lg:mb-3 capitalize">
+              {{ applicationDescription.job.title_name }}
+            </p>
             <div class="flex items-center mb-2 overflow-scroll scrollbar-hide snap-x scroll-pl-10 whitespace-nowrap">
               <div class="flex items-center snap-start">
                 <Calendar />
-                <p class="ml-1 font-normal text-sm lg:text-base text-white">Full-time</p>
+                <p class="ml-1 font-normal text-sm lg:text-base text-white capitalize">{{ applicationDescription.job.type.split('_').join(' ') }}</p>
               </div>
               <div class="flex items-center snap-start ml-2 mr-2">
                 <Pin />
-                <p class="ml-1 font-normal text-sm lg:text-base text-white">Remote</p>
+                <p class="ml-1 font-normal text-sm lg:text-base text-white capitalize">
+                  {{ applicationDescription.job.work_type.split('_').join(' ') }}
+                </p>
               </div>
               <div class="flex items-center snap-start">
                 <Tag />
-                <p class="ml-1 font-normal text-sm lg:text-base text-white wh">$10,000 - $12,000 / year</p>
+                <p class="ml-1 font-normal text-sm lg:text-base text-white">
+                  {{ applicationDescription.job.salary_min.formatted }} - {{ applicationDescription.job.salary_max.formatted }} /
+                  {{ applicationDescription.job.pay_period.split('_').join(' ') }}
+                </p>
               </div>
             </div>
-            <p class="text-white/60 ext-base font-normal">Posted 4 days ago</p>
+            <p class="text-white/60 ext-base font-normal">Posted {{ moment(applicationDescription.job.created_at).fromNow() }}</p>
           </div>
           <div class="bg-white p-3 inset-x-0 w-full max-h-[96px] -bottom-7 md:relative fixed md:hidden h-screen">
-            <Button label="You applied 2 days ago" color="primary" outline full class="" />
+            <Button :label="'You applied ' + moment(applicationDescription.created_at).fromNow()" color="primary" outline full class="" />
           </div>
-          <Button label="You applied 2 days ago" color="primary" outline class="hidden md:block" :pointer="false" />
+          <Button :label="'You applied ' + moment(applicationDescription.created_at).fromNow()" color="white" class="hidden md:block" pointer />
         </div>
       </template>
     </NavBody>
@@ -36,37 +43,29 @@
       @changeTab="changeTab"
       :numberOfTabs="tabs"
       :currentTab="tabNumber"
-      borderColor="border-brand-color"
-      class="lg:mt-32 mt-20 lg:px-20 px-5 py-8 mb-12 md:mb-0 stickytop-10 z-30"
+      borderColor="border-brand-primary"
+      class="lg:px-20 px-5 py-8 mb-12 md:mb-0 z-30"
     >
       <div v-if="tabNumber == 1" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="flex items-center mb-5">
           <img src="../assets/icons/resume.svg" alt="resume" class="mr-3" />
-          <p class="text-brand-black font-bold text-sm">Resume - Alison_Eyo_Resume.pdf</p>
+          <a :href="applicationDescription.resume_url" target="_blank" class="text-brand-black font-bold text-sm"
+            >Resume - {{ userDetails.name.split(' ').join('_') }}.pdf</a
+          >
         </div>
         <div class="flex items-start">
           <img src="../assets/icons/cover-letter.svg " alt="cover" class="mr-3" />
-          <p class="text-brand-black font-normal text-sm">
-            I'm Alison Eyo, a user advocate focused on delivering strategic and meaningful user experiences. I like to make & ship stuff that solves
-            problems and impacts billions of lives. While I am fascinated by all aspects of User Experience design, I specialize in ideation,
-            storytelling, and visual design. I love diving into why and how people use things and furthering those experiences to make them memorable.
-            I'm also obsessed with the delightful possibilities of software & I see Ul design as an artistic medium, not just a method of
-            problem-solving. For 3+ years, I've had the pleasure of designing digital interfaces and experiences for diverse products across finance,
-            education, e-commerce, cryptocurrency, health, and other industries for individuals & organizations while having fun in the process. I'm
-            Alison Eyo, a user advocate focused on delivering strategic and meaningful user experiences. I like to make & ship stuff that solves
-            problems and impacts billions of lives.
-          </p>
+          <p class="text-brand-black font-normal text-sm">{{ applicationDescription.note }}</p>
         </div>
       </div>
       <div v-if="tabNumber == 2" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="mb-4">
           <p class="font-medium text-xl text-brand-black mb-2">About this Job</p>
           <p class="text-brand-black/70 font-light">
-            Our flexible, distributed environment lets us work with the best people from around the world. Zapiens live in 40+ countries, including
-            the United Kingdom, Thailand, India, Nigeria, Taiwan, Guatemala, New Zealand, Australia, and more!
+            {{ applicationDescription.job.description }}
           </p>
         </div>
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <p class="font-medium text-xl text-brand-black mb-2">Zapier offers:</p>
           <ul class="text-brand-black/70 font-light list-inside list-disc whitespace-pre-wrap">
             <li>Competitive salary</li>
@@ -86,24 +85,11 @@
               holidays.
             </li>
           </ul>
-        </div>
+        </div> -->
         <div>
           <p class="font-medium text-xl text-brand-black mb-2">Job Specifications</p>
           <ul class="text-brand-black/70 font-light list-inside list-disc">
-            <li>Bachelor’s Degree in a relevant course</li>
-            <li>Must have completed NYSC</li>
-            <li>5+ years of experience working in Customer Support, Service Delivery, Quality, or a related role</li>
-            <li>3+ years of experience in management and supervision</li>
-            <li>Experience with support specific to retail, e-commerce and/or telecoms</li>
-            <li>Experience designing training materials and facilitating trainings</li>
-            <li>Familiarity with Zendesk or similar CRM tool is a key requirement</li>
-            <li>Advanced writing and editing skills, especially regarding documentation and training content</li>
-            <li>Ability to interface with and train all levels of employees</li>
-            <li>Leadership by influence</li>
-            <li>Communication skills</li>
-            <li>Independent work skills</li>
-            <li>Focus on results</li>
-            <li>MS Office proficiency</li>
+            <li v-for="item in applicationDescription.job.skills" :key="item" class="capitalize">{{ item }}</li>
           </ul>
         </div>
       </div>
@@ -118,9 +104,17 @@ import Calendar from '@/assets/icons/calendar.svg?inline';
 import Tag from '@/assets/icons/tag.svg?inline';
 import Pin from '@/assets/icons/pin.svg?inline';
 import Tab from '@/components/Tab.vue';
-import { ref } from 'vue';
+import Back from '@/assets/icons/back.svg?inline';
+import moment from 'moment';
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 
 const tabNumber = ref(1);
+const applicationDescription = ref(null);
+const pageLoaded = ref(false);
+const route = useRoute();
+const store = useStore();
 const tabs = ref([
   {
     name: 'Your Application',
@@ -132,4 +126,12 @@ const tabs = ref([
 const changeTab = (value) => {
   tabNumber.value = value;
 };
+const userDetails = computed(() => {
+  return store.state.auth.userDetails;
+});
+
+onMounted(async () => {
+  applicationDescription.value = await store.dispatch('global/getSingleApplication', route.params.id);
+  pageLoaded.value = true;
+});
 </script>

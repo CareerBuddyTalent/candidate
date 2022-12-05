@@ -1,39 +1,37 @@
 <template>
-  <main class="lg:flex lg:h-screen">
-    <div class="basis-8/12 lg:px-20 lg:py-14 p-4 overflow-auto scrollbar-hide">
-      <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 lg:hidden mb-10" />
+  <main class="lg:flex flex-col lg:bg-black h-screen">
+    <img src="@/assets/images/careercolor.svg" alt="logo" class="object-cover pt-4 block mx-auto" />
+    <div class="lg:px-20 lg:py-11 p-4 mt-10 w-1/2 bg-white rounded-xl overflow-auto scrollbar-hide mx-auto">
+      <!-- <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 lg:hidden mb-10" /> -->
       <div class="rounded-xl h-auto inset-0 right-auto top-[3.8125rem] flex justify-between lg:mb-14 mb-10">
         <div :class="[current == Welcome ? 'active' : current !== Welcome ? 'completed' : '']" class="relative step grow">
           <div class="v-stepper">
             <div class="circle"></div>
             <div class="line"></div>
           </div>
-          <!-- <div :class="[current == Welcome ? 'text-blue-600' : 'text-label']" class="content mb-10">Amount & source</div> -->
         </div>
         <div :class="[current == Job ? 'active' : current == Resume ? 'completed' : current !== Job ? '' : 'completed']" class="relative step grow">
           <div class="v-stepper">
             <div class="circle"></div>
             <div class="line"></div>
           </div>
-          <!-- <div :class="[current == 2 ? 'text-blue-600' : 'text-label']" class="content mb-10">Receipient details</div> -->
         </div>
         <div :class="[current == Resume ? 'completed' : current !== Resume ? '' : 'completed']" class="relative step">
           <div class="v-stepper">
             <div class="circle"></div>
             <div class="line"></div>
           </div>
-          <!-- <div class="content" :class="[current == 3 ? 'text-blue-600' : 'text-label']">Overview</div> -->
         </div>
       </div>
 
       <keep-alive>
-        <component :is="current"></component>
+        <component :is="current" ref="child"></component>
       </keep-alive>
       <Button :label="current == Welcome ? 'Skip' : 'Previous'" color="primaryOpacity" full @click="prevComp" class="mb-4" />
-      <Button label="Proceed" color="primary" full @click="nextComp" />
+      <Button label="Proceed" color="primary" full @click="handleEvent" />
     </div>
 
-    <div class="basis-2/6 bg-[#53B1FB]/10 px-20 hidden lg:block pt-11">
+    <!-- <div class="basis-2/6 bg-[#53B1FB]/10 px-20 hidden lg:block pt-11">
       <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 float-right mb-28" />
       <img src="@/assets/images/onboard.png" alt="logo" class="object-cover mb-9" />
       <div>
@@ -42,30 +40,36 @@
           We believe job hunting should be as easy as shopping online. Get connected to successful teams today!
         </p>
       </div>
-    </div>
+    </div> -->
   </main>
 </template>
 
 <script setup>
-import Welcome from '@/components/Onboarding/Welcome.vue';
 import Job from '@/components/Onboarding/Job.vue';
 import Resume from '@/components/Onboarding/Resume.vue';
+import Welcome from '@/components/Onboarding/Welcome.vue';
 import Button from '@/components/Button.vue';
-import { shallowRef } from 'vue';
+import { errorMessage } from '@/utils/helper';
+import { ref, shallowRef } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useStore } from 'vuex';
 
 const current = shallowRef(Welcome);
 const router = useRouter();
+const store = useStore();
+const child = ref(null);
+const toast = useToast();
 
-function nextComp() {
-  if (current.value != Job && current.value != Resume) {
-    current.value = Job;
-  } else if (current.value == Job) {
-    current.value = Resume;
-  } else if (current.value == Resume) {
-    alert('Weldone');
-  }
-}
+// function nextComp() {
+//   if (current.value != Job && current.value != Resume) {
+//     current.value = Job;
+//   } else if (current.value == Job) {
+//     current.value = Resume;
+//   } else if (current.value == Resume) {
+//     alert('Weldone');
+//   }
+// }
 function prevComp() {
   if (current.value == Welcome) {
     router.push('/jobs');
@@ -73,6 +77,49 @@ function prevComp() {
     current.value = Welcome;
   } else {
     current.value = Job;
+  }
+}
+
+async function handleEvent() {
+  try {
+    if (current.value == Welcome) {
+      await store.dispatch('auth/onboardProfile', child.value.profileDetails);
+      await store.dispatch('auth/getUser', { forceReload: true });
+      current.value = Job;
+    } else if (current.value == Job) {
+      const data = {
+        ...child.value.preferenceDetails,
+        next_role_perks: child.value.preferenceDetails?.next_role_perks?.split(','),
+      };
+      await store.dispatch('auth/onboardPreference', data);
+      await store.dispatch('auth/getUser', { forceReload: true });
+      current.value = Resume;
+    } else {
+      if (!child.value.resumeDetails) {
+        toast.error('Please upload file', {
+          timeout: 3000,
+          hideProgressBar: true,
+        });
+        return;
+      }
+      const data = new FormData();
+      data.append('resume', child.value.resumeDetails);
+      await store.dispatch('auth/onboardResume', data);
+      await store.dispatch('auth/getUser', { forceReload: true });
+      router.push('/jobs');
+      toast.success('Welcome on board', {
+        timeout: 3000,
+        hideProgressBar: true,
+      });
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 422) {
+      console.log(error.response.data.errors);
+    }
+    toast.error(errorMessage(error), {
+      timeout: 3000,
+      hideProgressBar: true,
+    });
   }
 }
 </script>

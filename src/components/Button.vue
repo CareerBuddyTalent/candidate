@@ -69,7 +69,7 @@ export default {
     disabled: Boolean,
     loading: Boolean,
     btnSize: String,
-    // pointer: Boolean,
+    pointer: Boolean,
   },
 
   computed: {
@@ -101,7 +101,7 @@ export default {
     componentClass() {
       const base = [
         'flex',
-        // this.pointer ? 'cursor-pointer' : 'cursor-not-allowed',
+        this.pointer ? 'cursor-none' : 'cursor-pointer',
         'justify-center',
         'items-center',
         'whitespace-nowrap',

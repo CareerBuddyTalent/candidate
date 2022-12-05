@@ -1,93 +1,96 @@
 <template>
   <main>
     <div class="mb-8">
-      <p class="font-cooper text-brand-black font-normal lg:text-4xl text-2xl">Welcome onboard, Alison.</p>
+      <p class="font-cooper text-brand-black font-normal lg:text-4xl text-2xl">
+        Welcome onboard, {{ userDetails.name.split(' ').slice(0, 1).toString() }}.
+      </p>
       <p class="text-brand-black/40 text-base font-normal">Let’s get you set up.</p>
     </div>
-    <form>
-      <div class="mb-6">
-        <label for="role" class="block mb-3 text-base font-medium text-brand-black/70">Which role best describes you?</label>
-        <select
-          v-model="details.role"
-          id="role"
-          class="bg-brand-light border-0 text-brand-black text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-        >
-          <option disabled value="">Select one option</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
+    <form v-if="pageLoaded">
+      <div class="grid gap-x-5 md:grid-cols-2 mb-6">
+        <Select label="Country" labelFor="Country" id="Country" :options="country" v-model="profileDetails.country" />
+        <Select label="State" labelFor="State" id="State" :options="state" v-model="profileDetails.state" />
       </div>
       <div class="mb-6">
-        <label for="qualification" class="block mb-3 text-base font-medium text-brand-black/70">Highest Academic Qualification</label>
-        <select
-          v-model="details.qualification"
-          id="qualification"
-          class="bg-brand-light border-0 text-brand-black text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-        >
-          <option disabled value="">Select one option</option>
-          <option value="US">United States</option>
-          <option value="CA">Canada</option>
-          <option value="FR">France</option>
-          <option value="DE">Germany</option>
-        </select>
-      </div>
-      <div class="mb-5">
-        <div class="mb-3">
-          <label for="job" class="block text-base font-medium text-brand-black/70">Current Job</label>
-          <p class="text-xs font-noraml text-brand-black/40">Your company will never see you’re looking for a job</p>
-        </div>
-        <input
-          v-model="details.job"
-          id="job"
-          type="text"
-          class="bg-brand-light border-0 placeholder:text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3 mb-2"
-          placeholder="Job Title"
-          required=""
-        />
-        <input
-          v-model="details.company"
-          id="company"
-          type="text"
-          class="bg-brand-light border-0 placeholder:text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3"
-          placeholder="Company"
-          required=""
+        <Select
+          label="Which role best describes you?"
+          labelFor="ProfessionalTitle"
+          id="professional_title"
+          :options="jobTitle"
+          v-model="profileDetails.professional_title"
         />
       </div>
-      <div class="flex items-center mb-6">
-        <input
-          v-model="details.unemployed"
-          id="unemployed"
-          type="checkbox"
-          class="w-6 h-6 text-[#00CC53] bg-brand-light rounded focus:ring-[#00CC53] focus:ring-1"
+      <div class="mb-6">
+        <Select
+          label="Highest Academic Qualification"
+          labelFor="Qualification"
+          id="Qualification"
+          :options="enums.candidate_academic_qualifications"
+          v-model="profileDetails.academic_qualification"
         />
-        <label for="unemployed" class="ml-2 text-base font-normal text-brand-black/80">I am currently unemployed</label>
       </div>
       <div class="mb-10">
-        <label for="job" class="mb-3 block text-base font-medium text-brand-black/70">LinkedIn Profile</label>
-        <input
-          v-model="details.linkedin"
-          id="linkedin"
+        <Input
+          label="LinkedIn Profile"
+          labelFor="linkedInProfile"
           type="url"
-          class="bg-brand-light border-0 placeholder:text-brand-black/20 text-sm rounded-md focus:border-0 focus:ring-0 block w-full p-3 mb-2"
+          id="linkedInProfile"
           placeholder="linkedin/a/................."
-          required=""
+          v-model="profileDetails.social_links.linkedin"
         />
       </div>
     </form>
+    <!-- <Button label="Proceed" color="primary" full @click="handleEvent" /> -->
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useStore } from 'vuex';
+import Select from '@/components/form/Select.vue';
+import Input from '@/components/form/Input.vue';
 
-const details = ref({
-  role: '',
-  qualification: '',
-  job: null,
-  company: null,
-  unemployed: false,
-  linkedin: '',
+const store = useStore();
+const enums = ref(null);
+const country = ref(null);
+const state = ref(null);
+const pageLoaded = ref(false);
+const jobTitle = ref(null);
+const profileDetails = ref({
+  country: '',
+  state: '',
+  professional_title: '',
+  academic_qualification: '',
+  social_links: {
+    linkedin: '',
+  },
+});
+onMounted(async () => {
+  enums.value = await store.dispatch('global/getEnums');
+  country.value = await store.dispatch('global/getCountries');
+  jobTitle.value = await store.dispatch('global/getJobTitles');
+  if (profileDetails.value.country) {
+    console.log(profileDetails.value.country);
+    state.value = await store.dispatch('global/getStates', profileDetails.value.country);
+  }
+  pageLoaded.value = true;
+});
+watch(
+  () => profileDetails.value.country,
+  async (country) => {
+    state.value = await store.dispatch('global/getStates', country);
+  },
+);
+const userDetails = computed(() => {
+  return store.state.auth.userDetails;
+});
+
+async function handleEvent() {
+  const res = await store.dispatch('auth/onboardProfile', profileDetails.value);
+  console.log(res);
+}
+
+defineExpose({
+  profileDetails,
 });
 </script>

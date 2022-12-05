@@ -19,10 +19,6 @@ export const auth = {
     loginSuccess(state, payload) {
       state.userDetails = payload;
     },
-    logout(state) {
-      state.userDetails = null;
-    },
-
     registerFailure(state) {
       state.status.loggedIn = false;
     },
@@ -31,10 +27,8 @@ export const auth = {
     async login({ commit }, credential) {
       const res = await AuthService.login(credential);
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
-      console.log(res.data.data.user);
       commit('loginSuccess', res.data.data.user);
       localStorage.setItem('token', res.data.data.authorisation.token);
-      setAuthHeaders();
       return res;
     },
     async register({ commit }, credential) {
@@ -42,16 +36,65 @@ export const auth = {
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
       commit('registerSuccess', res.data.data.user);
       localStorage.setItem('token', res.data.data.authorisation.token);
-      setAuthHeaders();
       return res;
     },
-    async logout({ commit }) {
-      const res = await AuthService.logout();
+    async forgetPasswordRequestOtp({ commit }, credential) {
+      const res = await AuthService.forgetPasswordRequestOtp(credential);
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
-      localStorage.removeItem('uid', res.headers.uid);
-      localStorage.removeItem('token', res.headers['access-token']);
-      localStorage.removeItem('client', res.headers.client);
-      commit('logout');
+      return res;
+    },
+    async forgetPasswordVerifyOtp({ commit }, credential) {
+      const res = await AuthService.forgetPasswordVerifyOtp(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async forgetPasswordReset({ commit }, credential) {
+      const res = await AuthService.forgetPasswordReset(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async resetPassword({ commit }, credential) {
+      const res = await AuthService.resetPassword(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async getUser({ commit, state }, credential) {
+      if (credential.forceReload) {
+        const res = await AuthService.getUser();
+        if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+        commit('loginSuccess', res.data.data);
+      }
+      return state.userDetails;
+    },
+    async updateUserProfile({ commit }, credential) {
+      const res = await AuthService.updateUserProfile(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data;
+    },
+    async updateUserPreference({ commit }, credential) {
+      const res = await AuthService.updateUserPreference(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data;
+    },
+    async updateUserResume({ commit }, credential) {
+      const res = await AuthService.updateUserResume(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data;
+    },
+    async onboardProfile({ commit }, credential) {
+      const res = await AuthService.onboardProfile(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async onboardPreference({ commit }, credential) {
+      const res = await AuthService.onboardPreference(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async onboardResume({ commit }, credential) {
+      const res = await AuthService.onboardResume(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
     },
   },
 };

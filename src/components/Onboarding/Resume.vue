@@ -65,6 +65,7 @@ import Button from '@/components/Button.vue';
 import { Cloud } from '@/utils/icons';
 import { ref, computed } from 'vue';
 
+const resumeDetails = ref(null);
 const files = ref([]);
 const selectedFile = ref(null);
 const emit = defineEmits(['input']);
@@ -76,11 +77,12 @@ const uploadInfo = computed(() => {
 
 const handleUpload = (e) => {
   files.value = Array.from(e.target.files) || [];
-  if (files.value[0].size > 99288) {
+  if (files.value[0].size > 10000000) {
     error.value = true;
   }
-  console.log(files.value[0]);
-  emit('input', files);
+  resumeDetails.value = files.value[0];
+  // console.log(files.value[0]);
+  // emit('input', files);
 };
 
 function uploadFile() {
@@ -92,6 +94,10 @@ function clearFile() {
   files.value = [];
   error.value = false;
 }
+
+defineExpose({
+  resumeDetails,
+});
 </script>
 
 <style scoped>
