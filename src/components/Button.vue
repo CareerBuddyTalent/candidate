@@ -69,7 +69,7 @@ export default {
     disabled: Boolean,
     loading: Boolean,
     btnSize: String,
-    pointer: Boolean,
+    // pointer: Boolean,
   },
 
   computed: {
@@ -101,7 +101,7 @@ export default {
     componentClass() {
       const base = [
         'flex',
-        this.pointer ? 'cursor-pointer' : 'cursor-not-allowed',
+        // this.pointer ? 'cursor-pointer' : 'cursor-not-allowed',
         'justify-center',
         'items-center',
         'whitespace-nowrap',
@@ -114,7 +114,7 @@ export default {
         this.outline ? 'border' : 'border-0',
         this.full ? 'w-full' : '',
         this.medium ? 'w-40' : '',
-
+        // this.loading ? this.disabled : '',
         getButtonColor(this.color, this.outline, !this.disabled),
       ];
 

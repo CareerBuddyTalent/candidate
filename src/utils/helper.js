@@ -6,12 +6,12 @@ export const sleep = async (time) => {
   });
 };
 export const checkStatus = (staus) => {
-  return staus >= 200 && staus < 400;
+  return staus === true;
 };
 
 export const errorMessage = (error) => {
   if (error.response) {
-    return error.response.data.err_message;
+    return error.response.data.message;
   }
   if (error.request) {
     return error.request.message;

@@ -1,6 +1,6 @@
 <template>
-  <main class="lg:flex lg:h-screen">
-    <div class="basis-1/2 bg-[#FDEDF3] px-20 hidden lg:block pt-11">
+  <main class="lg:flex lg:h-screen bg-black">
+    <div class="basis-1/2 b px-20 hidden lg:block pt-11">
       <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 mb-36" />
       <img src="@/assets/icons/auth.svg" alt="logo" class="object-cover mb-36" />
       <div>
@@ -8,7 +8,7 @@
         <p class="text-xl text-brand-black/40 font-normal">It’s simple, let us connect you to the best employers. For free!</p>
       </div>
     </div>
-    <div class="basis-1/2 grow">
+    <div class="basis-1/2 grow px-8 py-10">
       <router-view />
     </div>
   </main>

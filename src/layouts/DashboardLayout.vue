@@ -47,7 +47,7 @@
             </div>
             <ul class="py-1 text-sm text-brand-black font-normal" aria-labelledby="avatarButton">
               <li>
-                <router-link to="#" class="block py-2 px-4">Edit Profile</router-link>
+                <router-link to="/profile" class="block py-2 px-4">Edit Profile</router-link>
               </li>
               <li>
                 <router-link to="#" class="block py-2 px-4">Password & Security</router-link>

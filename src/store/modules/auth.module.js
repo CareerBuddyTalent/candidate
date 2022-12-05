@@ -31,20 +31,17 @@ export const auth = {
     async login({ commit }, credential) {
       const res = await AuthService.login(credential);
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
-      commit('loginSuccess', res.data.data);
-      localStorage.setItem('uid', res.headers.uid);
-      localStorage.setItem('token', res.headers['access-token']);
-      localStorage.setItem('client', res.headers.client);
+      console.log(res.data.data.user);
+      commit('loginSuccess', res.data.data.user);
+      localStorage.setItem('token', res.data.data.authorisation.token);
       setAuthHeaders();
       return res;
     },
     async register({ commit }, credential) {
       const res = await AuthService.register(credential);
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
-      commit('registerSuccess', res.data.data);
-      localStorage.setItem('uid', res.headers.uid);
-      localStorage.setItem('token', res.headers['access-token']);
-      localStorage.setItem('client', res.headers.client);
+      commit('registerSuccess', res.data.data.user);
+      localStorage.setItem('token', res.data.data.authorisation.token);
       setAuthHeaders();
       return res;
     },
