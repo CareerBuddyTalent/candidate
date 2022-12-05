@@ -1,40 +1,26 @@
 <template>
-  <main class="lg:px-28 lg:py-11 p-4">
-    <div class="lg:block flex justify-between items-center lg:mb-14 mb-10 mt5">
-      <img src="@/assets/images/tamborinSmall.png" alt="logo" class="object-cover lg:hidden" />
-      <p class="text-brand-black/70 font-normal text-sm text-right lg:hidden">
-        Remember? <router-link to="/login" class="text-brand-primary">Sign In</router-link>
-      </p>
-    </div>
+  <main class="lg:px-28 lg:py-11 p-4 bg-white rounded-xl">
     <div class="mb-10">
       <p class="text-brand-black font-normal text-3xl font-cooper">Verify email address</p>
       <p class="text-brand-black/40 text-base font-normal grid">
-        <span class="">We’ve just sent a 6 digit code to adf**********.com</span>
+        <span class="">We’ve just sent a 6 digit code to {{ email }}</span>
         <span>Check your email. Enter your email address to continue</span>
       </p>
     </div>
     <form class="">
-      <div class="relative mb-7">
-        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-          <Email />
-        </div>
-        <input
-          type="email"
-          id="email"
-          class="bg-brand-light text-sm rounded-md w-full pl-10 p-3 appearance-none focus:outline-none border-transparent focus:ring-0 focus:border-brand-primary peer"
-          placeholder=" "
-          required=""
+      <div style="display: flex; flex-direction: row; justify-content: center">
+        <v-otp-input
+          ref="otpInput"
+          input-classes="otp-input"
+          separator="-"
+          :num-inputs="6"
+          :should-auto-focus="true"
+          :is-input-num="true"
+          :conditionalClass="['one', 'two', 'three', 'four']"
+          :placeholder="['*', '*', '*', '*', '*', '*']"
+          @on-change="handleOnChange"
+          @on-complete="handleOnComplete"
         />
-        <label
-          for="floating_outlined"
-          class="absolute text-sm text-brand-black/20 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] px-2 ml-6 bg-brand-light peer-focus:px-2 peer-focus:text-brand-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1"
-          >Email Address</label
-        >
-      </div>
-      <Button label="Next" color="primary" full @click="$router.push('/new-password')" />
-      <div class="lg:flex items-center justify-center mb-10 mt-10 text-center hidden">
-        <label for="remember" class="ml-4 text-sm font-medium text-brand-black/70 mr-1">Remember password?</label>
-        <router-link class="text-brand-primary cursor-pointer" to="/login">Log In</router-link>
       </div>
     </form>
   </main>
@@ -43,4 +29,68 @@
 <script setup>
 import Email from '@/assets/icons/email.svg?inline';
 import Button from '@/components/Button.vue';
+import { errorMessage } from '@/utils/helper';
+// import { email } from '@vuelidate/validators';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import { useStore } from 'vuex';
+
+const otpInput = ref('');
+const store = useStore();
+const router = useRouter();
+const toast = useToast();
+const email = localStorage.getItem('email');
+
+const handleOnChange = (value) => {
+  submit(value);
+};
+
+const submit = async (value) => {
+  try {
+    if (value.length >= 6) {
+      const data = {
+        email: localStorage.getItem('email'),
+        otp: value,
+      };
+      const res = await store.dispatch('auth/forgetPasswordVerifyOtp', data);
+      console.log(res);
+      localStorage.setItem('token', res.data.data.token);
+      router.push('/new-password');
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 422) {
+      console.log(error.response.data.errors);
+    }
+    toast.error(errorMessage(error), {
+      timeout: 3000,
+      hideProgressBar: true,
+    });
+  }
+};
 </script>
+
+<style>
+.otp-input {
+  width: 56px !important;
+  height: 56px !important;
+  padding: 5px !important;
+  margin: 30px 10px 30px 10px !important;
+  font-size: 20px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(0, 0, 0, 0.3) !important;
+  text-align: center !important;
+}
+@media screen and (max-width: 413px) {
+  .otp-input {
+    width: 33px !important;
+    height: 33px !important;
+  }
+}
+@media screen and (max-width: 900px) {
+  .otp-input {
+    width: 33px !important;
+    height: 33px !important;
+  }
+}
+</style>

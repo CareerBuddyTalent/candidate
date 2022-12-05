@@ -4,11 +4,11 @@
       <template #body>
         <div class="flex items-center justify-between relative">
           <div class="w-full">
-            <div class="xl:flex items-center mb-4 cursor-pointer hidden" @click.stop="$router.go(-1)">
+            <div class="flex items-center mb-4 cursor-pointer" @click.stop="$router.go(-1)">
               <Back />
-              <p class="text-brand-primary ml-2">Back</p>
+              <p class="text-white ml-2">Back</p>
             </div>
-            <p class="font-normal lg:text-4xl text-2xl text-white font-albert lg:mb-3">{{ jobDescription.title }}</p>
+            <p class="font-normal lg:text-4xl text-2xl text-white font-albert lg:mb-3 capitalize">{{ jobDescription.title_name }}</p>
             <div class="flex items-center mb-2 overflow-scroll scrollbar-hide snap-x scroll-pl-10 whitespace-nowrap">
               <div class="flex items-center snap-start">
                 <Calendar />
@@ -31,11 +31,11 @@
           <div class="bg-white p-3 inset-x-0 w-full max-h-[96px] -bottom-7 md:relative fixed md:hidden h-screen">
             <Button label="Apply for this Role" color="primary" @click.stop="showModal = !showModal" full class="" />
           </div>
-          <Button label="Apply for this Role" color="primary" @click.stop="showModal = !showModal" class="hidden md:block" />
+          <Button label="Apply for this Role" color="white" outline @click.stop="showModal = !showModal" class="hidden md:block" />
         </div>
       </template>
     </NavBody>
-    <div class="lg:mt-40 mt-20 lg:px-20 px-5 py-8 mb-12 md:mb-0">
+    <div class="lg:px-20 px-5 py-8 mb-12 md:mb-0">
       <div class="mb-4">
         <p class="font-medium text-xl text-brand-black mb-2">About this Job</p>
         <p class="text-brand-black/70 font-light">{{ jobDescription.description }}</p>
@@ -43,7 +43,7 @@
       <div>
         <p class="font-medium text-xl text-brand-black mb-2">Job Specifications</p>
         <ul class="text-brand-black/70 font-light list-inside list-disc capitalize">
-          <li v-for="item in jobDescription.skills" :key="item">{{ item }}</li>
+          <li v-for="item in jobDescription.skills" :key="item" class="capitalize">{{ item }}</li>
         </ul>
       </div>
     </div>
@@ -53,7 +53,9 @@
         <div class="flex items-center justify-between w-full">
           <div class="flex items-center w-4/6">
             <img :src="jobDescription.employer.logo_url" class="h-8 w-8 rounded-full object-cover mr-2" alt="companyLogo" />
-            <p class="font-cooper italic font-normal lg:text-lg text-base text-brand-black/70">Apply as a {{ jobDescription.title }} at Okra</p>
+            <p class="font-cooper font-normal lg:text-lg text-base text-brand-black/70 capitalize">
+              Apply as a {{ jobDescription.title_name }} at Okra
+            </p>
           </div>
           <Close @click.stop="showModal = false" class="cursor-pointer" />
         </div>
@@ -98,7 +100,7 @@
             <img class="w-11 h-11 rounded-full border-2 border-white" :src="jobDescription.employer.logo_url" alt="image" />
             <img class="w-10 h-10 rounded-full border-2 border-white" :src="userDetails.candidate.avatar" alt="image" />
           </div>
-          <p class="text-brand-black text-opacity-70 text-2xl italic font-normal mb-2 font-cooper">Application Successful!</p>
+          <p class="text-brand-black text-opacity-70 text-2xl font-normal mb-2 font-cooper">Application Successful!</p>
           <p class="text-brand-black text-opacity-60 font-normal text-base text-center mb-4">
             We’ve sent your application to Okra. Monitor the application process in your
             <span class="text-brand-black"><router-link to="/applied">Applied</router-link></span> tab.

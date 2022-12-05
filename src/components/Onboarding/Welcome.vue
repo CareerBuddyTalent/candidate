@@ -12,11 +12,11 @@
         <Select label="State" labelFor="State" id="State" :options="state" v-model="profileDetails.state" />
       </div>
       <div class="mb-6">
-        <Input
+        <Select
           label="Which role best describes you?"
-          type="text"
           labelFor="ProfessionalTitle"
           id="professional_title"
+          :options="jobTitle"
           v-model="profileDetails.professional_title"
         />
       </div>
@@ -55,6 +55,7 @@ const enums = ref(null);
 const country = ref(null);
 const state = ref(null);
 const pageLoaded = ref(false);
+const jobTitle = ref(null);
 const profileDetails = ref({
   country: '',
   state: '',
@@ -67,6 +68,7 @@ const profileDetails = ref({
 onMounted(async () => {
   enums.value = await store.dispatch('global/getEnums');
   country.value = await store.dispatch('global/getCountries');
+  jobTitle.value = await store.dispatch('global/getJobTitles');
   if (profileDetails.value.country) {
     console.log(profileDetails.value.country);
     state.value = await store.dispatch('global/getStates', profileDetails.value.country);
@@ -84,7 +86,6 @@ const userDetails = computed(() => {
 });
 
 async function handleEvent() {
-  console.log(profileDetails.value);
   const res = await store.dispatch('auth/onboardProfile', profileDetails.value);
   console.log(res);
 }

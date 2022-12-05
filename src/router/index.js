@@ -79,7 +79,7 @@ const routes = [
         },
       },
       {
-        path: '/applied/:id/:name',
+        path: '/applied/:id',
         name: 'Applications-Description',
         component: () => import(/* webpackChunkName: "SingleApplication" */ '@/views/ApplicationDescription.vue'),
         meta: {
@@ -116,6 +116,16 @@ const routes = [
           middleware: [AuthMiddleware],
         },
       },
+      {
+        path: '/password',
+        name: 'Password',
+        component: () => import(/* webpackChunkName: "Assessment" */ '@/views/auth/PasswordSecurity.vue'),
+        meta: {
+          title: 'Password & Security',
+          text: '',
+          middleware: [AuthMiddleware],
+        },
+      },
     ],
   },
 ];
@@ -123,6 +133,8 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active',
 });
 router.beforeEach(VueRouteMiddleware({ AuthMiddleware }));
 

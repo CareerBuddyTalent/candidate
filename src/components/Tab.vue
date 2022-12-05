@@ -12,7 +12,7 @@
             class="inline-block text-base p-4 rounded-t-lg"
             type="button"
             @click="toggleTabs(i + 1)"
-            :class="[currentTab !== i + 1 ? 'text-brand-black/40' : 'text-brand-color border-brand-color border-b-2 font-bold', borderColor]"
+            :class="[currentTab !== i + 1 ? 'text-brand-black/40' : 'text-brand-primary border-b-2 font-bold', borderColor]"
           >
             {{ tab.name }}
           </button>

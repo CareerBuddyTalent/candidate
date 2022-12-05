@@ -3,6 +3,9 @@ class GlobalService {
   async getEnum() {
     return await axiosInstance.get('misc/enums');
   }
+  async getJobTitles() {
+    return await axiosInstance.get('misc/job-titles');
+  }
   async getCountries() {
     return await axiosInstance.get('misc/countries');
   }
@@ -17,6 +20,12 @@ class GlobalService {
   }
   async getSingleJob(id) {
     return await axiosInstance.get(`candidate/job-pools/${id}`);
+  }
+  async getAllApplications() {
+    return await axiosInstance.get('candidate/applications');
+  }
+  async getSingleApplication(id) {
+    return await axiosInstance.get(`candidate/applications/${id}`);
   }
   async applyToJob(data) {
     console.log(data);

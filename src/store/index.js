@@ -16,6 +16,7 @@ export default createStore({
   actions: {
     async logout({ commit }) {
       localStorage.removeItem('token');
+      localStorage.removeItem('vuex');
       localStorage.clear();
       commit('logout');
     },

@@ -7,12 +7,12 @@
     <div class="mb-10">
       <p class="text-brand-black text-[40px] font-albertExtraBold">Sign Up</p>
       <p class="text-brand-black/70 text-lg font-normal">
-        Have an account? <router-link to="/register" class="text-brand-primary font-albertBold text-lg">Log In</router-link>
+        Have an account? <router-link to="/login" class="text-brand-primary font-albertBold text-lg">Log In</router-link>
       </p>
     </div>
     <div class="lg:flex grid gap-3 mb-8">
       <Button label="Log in with LinkedIn" :icon="Linkedin" color="info" full />
-      <Button label="Log in with Google" :icon="Google" outline color="white" full />
+      <Button label="Log in with Google" :icon="Google" outline color="black" full />
     </div>
     <div class="flex items-center mb-8">
       <div class="flex w-full bg-brand-black/10 h-0.5"></div>
@@ -101,7 +101,7 @@ import useVuelidate from '@vuelidate/core';
 import { ref, reactive, computed } from 'vue';
 import { useStore } from 'vuex';
 import { required, email, minLength, helpers, sameAs, alphaNum } from '@vuelidate/validators';
-import { sleep } from '@/utils/helper';
+import { errorMessage, sleep } from '@/utils/helper';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 
@@ -150,7 +150,6 @@ const rules = {
 
 async function handleRegistration() {
   if (!v$.value.$anyDirty) return;
-  // console.log(v$.value.$anyDirty)
   try {
     loading.value = true;
     disabled.value = true;

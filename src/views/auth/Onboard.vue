@@ -1,7 +1,8 @@
 <template>
-  <main class="lg:flex lg:h-screen">
-    <div class="basis-8/12 lg:px-20 lg:py-14 p-4 overflow-auto scrollbar-hide">
-      <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 lg:hidden mb-10" />
+  <main class="lg:flex flex-col lg:bg-black h-screen">
+    <img src="@/assets/images/careercolor.svg" alt="logo" class="object-cover pt-4 block mx-auto" />
+    <div class="lg:px-20 lg:py-11 p-4 mt-10 w-1/2 bg-white rounded-xl overflow-auto scrollbar-hide mx-auto">
+      <!-- <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 lg:hidden mb-10" /> -->
       <div class="rounded-xl h-auto inset-0 right-auto top-[3.8125rem] flex justify-between lg:mb-14 mb-10">
         <div :class="[current == Welcome ? 'active' : current !== Welcome ? 'completed' : '']" class="relative step grow">
           <div class="v-stepper">
@@ -30,7 +31,7 @@
       <Button label="Proceed" color="primary" full @click="handleEvent" />
     </div>
 
-    <div class="basis-2/6 bg-[#53B1FB]/10 px-20 hidden lg:block pt-11">
+    <!-- <div class="basis-2/6 bg-[#53B1FB]/10 px-20 hidden lg:block pt-11">
       <img src="@/assets/images/tamborin.png" alt="logo" class="object-cover h-6 float-right mb-28" />
       <img src="@/assets/images/onboard.png" alt="logo" class="object-cover mb-9" />
       <div>
@@ -39,7 +40,7 @@
           We believe job hunting should be as easy as shopping online. Get connected to successful teams today!
         </p>
       </div>
-    </div>
+    </div> -->
   </main>
 </template>
 
@@ -83,6 +84,7 @@ async function handleEvent() {
   try {
     if (current.value == Welcome) {
       await store.dispatch('auth/onboardProfile', child.value.profileDetails);
+      await store.dispatch('auth/getUser', { forceReload: true });
       current.value = Job;
     } else if (current.value == Job) {
       const data = {
@@ -90,6 +92,7 @@ async function handleEvent() {
         next_role_perks: child.value.preferenceDetails?.next_role_perks?.split(','),
       };
       await store.dispatch('auth/onboardPreference', data);
+      await store.dispatch('auth/getUser', { forceReload: true });
       current.value = Resume;
     } else {
       if (!child.value.resumeDetails) {
@@ -102,6 +105,7 @@ async function handleEvent() {
       const data = new FormData();
       data.append('resume', child.value.resumeDetails);
       await store.dispatch('auth/onboardResume', data);
+      await store.dispatch('auth/getUser', { forceReload: true });
       router.push('/jobs');
       toast.success('Welcome on board', {
         timeout: 3000,
@@ -111,7 +115,6 @@ async function handleEvent() {
   } catch (error) {
     if (error.response && error.response.status === 422) {
       console.log(error.response.data.errors);
-      // return error.response.data.message;
     }
     toast.error(errorMessage(error), {
       timeout: 3000,

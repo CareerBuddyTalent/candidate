@@ -12,6 +12,7 @@ export const global = {
     Countries: null,
     States: null,
     companyCategory: null,
+    jobTitles: null,
   },
   mutations: {
     Countries(state, payload) {
@@ -25,6 +26,9 @@ export const global = {
     },
     setCompanyCategory(state, payload) {
       state.companyCategory = payload;
+    },
+    setJobTitles(state, payload) {
+      state.jobTitles = payload;
     },
   },
   actions: {
@@ -53,6 +57,12 @@ export const global = {
       commit('setCompanyCategory', res.data.data);
       return res.data.data;
     },
+    async getJobTitles({ commit }) {
+      const res = await GlobalService.getJobTitles();
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      commit('setJobTitles', res.data.data);
+      return res.data.data;
+    },
     async getAllJobs({ commit }) {
       const res = await GlobalService.getAllJobs();
       // if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
@@ -66,6 +76,16 @@ export const global = {
     async applyToJob({ commit }, credential) {
       console.log(credential);
       const res = await GlobalService.applyToJob(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data.data;
+    },
+    async getAllApplications({ commit }) {
+      const res = await GlobalService.getAllApplications();
+      // if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data.data;
+    },
+    async getSingleApplication({ commit }, credential) {
+      const res = await GlobalService.getSingleApplication(credential);
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
       return res.data.data;
     },

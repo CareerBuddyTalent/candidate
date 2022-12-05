@@ -6,6 +6,18 @@ class AuthService {
   async register(user) {
     return await axiosInstance.post('auth/register', user);
   }
+  async forgetPasswordRequestOtp(user) {
+    return await axiosInstance.post('auth/forgot-password/request-otp', user);
+  }
+  async forgetPasswordVerifyOtp(details) {
+    return await axiosInstance.post('auth/forgot-password/verify-otp', details);
+  }
+  async forgetPasswordReset(details) {
+    return await axiosInstance.post('auth/forgot-password/reset', details);
+  }
+  async resetPassword(details) {
+    return await axiosInstance.post('candidate/profile/security/password', details);
+  }
   async onboardProfile(details) {
     return await axiosInstance.post('candidate/onboarding/profile', details);
   }
@@ -21,8 +33,11 @@ class AuthService {
   async updateUserProfile(details) {
     return await axiosInstance.post('candidate/profile', details);
   }
-  async updateUserProfilePicture(details) {
-    return await axiosInstance.post('candidate/profile/avatar', details);
+  async updateUserPreference(details) {
+    return await axiosInstance.post('candidate/profile/job-preference', details);
+  }
+  async updateUserResume(details) {
+    return await axiosInstance.post('candidate/profile/resume', details);
   }
 }
 export default new AuthService();

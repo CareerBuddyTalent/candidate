@@ -8,7 +8,7 @@
         </p>
       </template>
     </NavBody>
-    <div class="lg:px-20 px-5 py-8 mt-20">
+    <div class="lg:px-20 px-5 py-5 mt-10">
       <form class="grid gap-4 md:flex mb-10">
         <div class="relative md:w-1/4">
           <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -62,7 +62,7 @@
 <script setup>
 import Search from '@/assets/icons/search.svg?inline';
 import Button from '@/components/Button.vue';
-import Card from '@/components/Card.vue';
+import Card from '@/components/jobCard.vue';
 import NavBody from '@/components/NavBody.vue';
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';

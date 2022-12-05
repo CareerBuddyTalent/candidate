@@ -38,6 +38,26 @@ export const auth = {
       localStorage.setItem('token', res.data.data.authorisation.token);
       return res;
     },
+    async forgetPasswordRequestOtp({ commit }, credential) {
+      const res = await AuthService.forgetPasswordRequestOtp(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async forgetPasswordVerifyOtp({ commit }, credential) {
+      const res = await AuthService.forgetPasswordVerifyOtp(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async forgetPasswordReset({ commit }, credential) {
+      const res = await AuthService.forgetPasswordReset(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
+    async resetPassword({ commit }, credential) {
+      const res = await AuthService.resetPassword(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res;
+    },
     async getUser({ commit, state }, credential) {
       if (credential.forceReload) {
         const res = await AuthService.getUser();
@@ -49,7 +69,17 @@ export const auth = {
     async updateUserProfile({ commit }, credential) {
       const res = await AuthService.updateUserProfile(credential);
       if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
-      return res;
+      return res.data;
+    },
+    async updateUserPreference({ commit }, credential) {
+      const res = await AuthService.updateUserPreference(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data;
+    },
+    async updateUserResume({ commit }, credential) {
+      const res = await AuthService.updateUserResume(credential);
+      if (!checkStatus(res.data.status)) throw Error(res.data.err_message);
+      return res.data;
     },
     async onboardProfile({ commit }, credential) {
       const res = await AuthService.onboardProfile(credential);
