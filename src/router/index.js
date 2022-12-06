@@ -11,6 +11,10 @@ const routes = [
     component: AuthLayout,
     children: [
       {
+        path: '/',
+        redirect: { name: 'Login' },
+      },
+      {
         path: '/register',
         name: 'Register',
         component: () => import(/* webpackChunkName: "Register" */ '@/views/auth/Register.vue'),
